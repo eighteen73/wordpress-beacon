@@ -18,17 +18,17 @@ class CronControl extends Singleton {
 	public function setup() {
 		add_filter( 'cron_schedules', [ $this, 'job_schedule' ] );
 
-		// If it's not a mu-plugin
-		// register_activation_hook( __FILE__, [ $this, 'job_activation' ] );
-		// register_deactivation_hook( __FILE__, [ $this, 'job_deactivation' ] );
+		// Note this can't be run if it's converted to a mu-plugin
+		register_activation_hook( 'wordpress-diagnostics/wordpress-diagnostics.php', [ $this, 'job_activation' ] );
+		register_deactivation_hook( 'wordpress-diagnostics/wordpress-diagnostics.php', [ $this, 'job_deactivation' ] );
 
-		add_action( 'run_checks_event', 'run_checks', 10, 2 );
+		add_action( 'run_checks_event', [ $this, 'run_checks' ], 10, 2 );
 	}
 
 	public function job_schedule($schedules)
 	{
 		$schedules['diagnostics_schedule'] = array(
-			'interval' => 1,
+			'interval' => 10800,
 			'display' => __('Every 3 hours')
 		);
 		return $schedules;

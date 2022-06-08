@@ -1,7 +1,7 @@
 {
     "name": "eighteen73/wordpress-diagnostics",
     "description": "Send website information to the developer's monitoring service for integrity checks.",
-    "type": "wordpress-muplugin",
+    "type": "wordpress-plugin",
     "license": "MIT",
     "autoload": {
         "psr-4": {
