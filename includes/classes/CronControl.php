@@ -28,7 +28,8 @@ class CronControl extends Singleton {
 	public function job_schedule($schedules)
 	{
 		$schedules['diagnostics_schedule'] = array(
-			'interval' => 10800,
+			'interval' => 2,
+			// 'interval' => 10800,
 			'display' => __('Every 3 hours')
 		);
 		return $schedules;
@@ -48,6 +49,6 @@ class CronControl extends Singleton {
 
 	public function run_checks()
 	{
-		// do something
+		Checks::instance()->run();
 	}
 }
