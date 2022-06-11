@@ -4,14 +4,33 @@ Gathers data that's useful for diagnostic checks. Nothing collected is PII nor d
 
 ## Installation
 
-Assuming you are using a Composer-based WordPress project:
+### Using Composer
+
+This plugin is hosted in our private repo so you will need to ensure that is in your `composer.json` file.
+
+```json
+"repositories": [
+  {
+    "type": "composer",
+    "url": "https://code.orphans.co.uk/pkg/wordpress"
+  },
+  ...
+],
+```
+
+Then:
 
 1. Run `composer install website-monitor`
-2. Activate the plugin in your CMS
+2. Activate the plugin in your CMS as normal
+
+### Without Composer
+
+We hihgly encourage the plugin to be installed using Composer where possible.
+
 
 ## Behaviour
 
-The plugin requires no configuraiton. Once activated it sends data to our monitoring server every 3 hours. 
+The plugin requires no configuraiton. Once activated it sends data to our monitoring server every 3 hours.
 
 ## Included Data
 
