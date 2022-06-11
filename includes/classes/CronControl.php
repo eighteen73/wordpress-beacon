@@ -63,7 +63,9 @@ class CronControl extends Singleton {
 		if ($response instanceof \WP_Error) {
 			$error = json_encode($response->errors);
 			error_log("Failed run website-monitor: {$error}");
+			return $response->errors;
 		}
 
+		return true;
 	}
 }
