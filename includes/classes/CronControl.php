@@ -2,10 +2,10 @@
 /**
  * Schedules this plugin's tasks
  *
- * @package WordPressDiagnostics
+ * @package WebsiteMonitor
  */
 
-namespace Eighteen73\WordPressDiagnostics;
+namespace Eighteen73\WebsiteMonitor;
 
 /**
  * Schedules this plugin's tasks
@@ -19,15 +19,15 @@ class CronControl extends Singleton {
 		add_filter( 'cron_schedules', [ $this, 'job_schedule' ] );
 
 		// Note this can't be run if it's converted to a mu-plugin
-		register_activation_hook( 'wordpress-diagnostics/wordpress-diagnostics.php', [ $this, 'job_activation' ] );
-		register_deactivation_hook( 'wordpress-diagnostics/wordpress-diagnostics.php', [ $this, 'job_deactivation' ] );
+		register_activation_hook( 'website-monitor/website-monitor.php', [ $this, 'job_activation' ] );
+		register_deactivation_hook( 'website-monitor/website-monitor.php', [ $this, 'job_deactivation' ] );
 
 		add_action( 'run_checks_event', [ $this, 'run_checks' ], 10, 2 );
 	}
 
 	public function job_schedule($schedules)
 	{
-		$schedules['diagnostics_schedule'] = array(
+		$schedules['website_monitor_schedule'] = array(
 			'interval' => 10800,
 			'display' => __('Every 3 hours')
 		);
@@ -37,7 +37,7 @@ class CronControl extends Singleton {
 	public function job_activation()
 	{
 		if ( ! wp_next_scheduled( 'run_checks_event' ) ) {
-			wp_schedule_event( time(), 'diagnostics_schedule', 'run_checks_event' );
+			wp_schedule_event( time(), 'website_monitor_schedule', 'run_checks_event' );
 		}
 	}
 
@@ -49,12 +49,12 @@ class CronControl extends Singleton {
 	public function run_checks()
 	{
 		$data = Checks::instance()->run();
-		$response = wp_remote_post( 'https://hub.eighteen73.co.uk/api/website-diagnostics', [
+		$response = wp_remote_post( 'https://hub.eighteen73.co.uk/api/website-monitor', [
 			'body' => [
 				'headers' => [
 					'Accept' => 'application/json',
 					'Content-Type' => 'application/json',
-					'X-Diagnostics-Domain' => $data['technical']['web']['domain'],
+					'X-Website-Monitor' => $data['technical']['web']['domain'],
 				],
 				'body' => json_encode($data),
 			],
@@ -62,7 +62,7 @@ class CronControl extends Singleton {
 
 		if ($response instanceof \WP_Error) {
 			$error = json_encode($response->errors);
-			error_log("Failed to send wordpress-diagnostics: {$error}");
+			error_log("Failed run website-monitor: {$error}");
 		}
 
 	}

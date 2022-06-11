@@ -1,14 +1,15 @@
 <?php
 /**
- * Runs the diagnostic checks
+ * Gathers data that's useful for diagnostic checks. Nothing collected is PII nor does it contain information
+ * that would be otherwise considered as highly sensitive.
  *
- * @package WordPressDiagnostics
+ * @package WebsiteMonitor
  */
 
-namespace Eighteen73\WordPressDiagnostics;
+namespace Eighteen73\WebsiteMonitor;
 
 /**
- * Runs the diagnostic checks
+ * Gathers data that's useful for diagnostic checks
  */
 class Checks extends Singleton {
 

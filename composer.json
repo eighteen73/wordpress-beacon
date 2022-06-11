@@ -1,11 +1,11 @@
 {
-    "name": "eighteen73/wordpress-diagnostics",
+    "name": "eighteen73/website-monitor",
     "description": "Send website information to the developer's monitoring service for integrity checks.",
     "type": "wordpress-plugin",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Eighteen73\\WordPressDiagnostics\\": "includes/classes/"
+            "Eighteen73\\WebsiteMonitor\\": "includes/classes/"
         }
     },
     "authors": [

@@ -2,10 +2,10 @@
 /**
  * Singleton definition for this plugin's classes
  *
- * @package WordPressDiagnostics
+ * @package WebsiteMonitor
  */
 
-namespace Eighteen73\WordPressDiagnostics;
+namespace Eighteen73\WebsiteMonitor;
 
 /**
  * Abstract class
