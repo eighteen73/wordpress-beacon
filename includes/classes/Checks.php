@@ -40,7 +40,6 @@ class Checks extends Singleton {
 		$git_date = $this->git_date();
 
 		$data = [
-			'url' => get_bloginfo( 'url' ),
 			'cms' => [
 				'contact' => get_bloginfo( 'admin_email' ),
 				'name' => 'wordpress',
@@ -52,7 +51,7 @@ class Checks extends Singleton {
 				'version' => $theme->get( 'Version' ),
 			],
 			'plugins' => $plugins,
-			'host' => [
+			'technical' => [
 				'git' => [
 					'last_commit_date' => $git_date,
 					'origin' => $git_origin,
@@ -70,11 +69,13 @@ class Checks extends Singleton {
 					'version' => phpversion(),
 				],
 				'web' => [
+					'domain' => $_SERVER['HTTP_HOST'],
 					'https' => isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on',
 					'ip' => $_SERVER['SERVER_ADDR'] ?? null,
 					'path' => $_SERVER['DOCUMENT_ROOT'] ?? null,
 					'protocol' => $_SERVER['SERVER_PROTOCOL'] ?? null,
 					'server' => $_SERVER['SERVER_SOFTWARE'] ?? null,
+					'url' => get_bloginfo( 'url' ),
 				],
 			],
 		];
