@@ -22,12 +22,10 @@ class Checks extends Singleton {
 	/**
 	 * Runs should be initiated by a cron task
 	 */
-	public function run() {
+	public function run(): array {
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
-
-		ray()->clearAll();
 
 		$theme = wp_get_theme();
 
@@ -80,7 +78,7 @@ class Checks extends Singleton {
 				],
 			],
 		];
-		ray( $data );
+		return $data;
 	}
 
 	/**
