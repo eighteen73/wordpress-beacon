@@ -1,11 +1,11 @@
 {
-    "name": "eighteen73/website-monitor",
+    "name": "eighteen73/wordpress-condition-report",
     "description": "Send website information to the developer's monitoring service for integrity checks.",
     "type": "wordpress-plugin",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Eighteen73\\WebsiteMonitor\\": "includes/classes/"
+            "Eighteen73\\ConditionReport\\": "includes/classes/"
         }
     },
     "authors": [

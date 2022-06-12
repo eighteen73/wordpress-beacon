@@ -2,10 +2,10 @@
 /**
  * Custom actions for manual interaction
  *
- * @package WebsiteMonitor
+ * @package ConditionReport
  */
 
-namespace Eighteen73\WebsiteMonitor;
+namespace Eighteen73\ConditionReport;
 
 /**
  * Custom actions for manual interaction
@@ -16,9 +16,9 @@ class Actions {
 	 * Set up the actions
 	 */
 	public static function setup() {
-		add_filter( 'plugin_action_links', [ 'Eighteen73\WebsiteMonitor\Actions', 'add_links' ], 10, 5 );
-		add_action( 'wp_ajax_website_monitor_send_data', [ 'Eighteen73\WebsiteMonitor\Actions', 'send_data' ] );
-		add_action( 'wp_ajax_website_monitor_copy_data', [ 'Eighteen73\WebsiteMonitor\Actions', 'copy_data' ] );
+		add_filter( 'plugin_action_links', [ 'Eighteen73\ConditionReport\Actions', 'add_links' ], 10, 5 );
+		add_action( 'wp_ajax_condition_report_send_data', [ 'Eighteen73\ConditionReport\Actions', 'send_data' ] );
+		add_action( 'wp_ajax_condition_report_copy_data', [ 'Eighteen73\ConditionReport\Actions', 'copy_data' ] );
 	}
 
 	/**
@@ -29,10 +29,10 @@ class Actions {
 	 * @return array|string[]
 	 */
 	public static function add_links( array $actions, string $plugin_file ): array {
-		if ( $plugin_file === 'website-monitor/website-monitor.php' ) {
+		if ( $plugin_file === 'wordpress-condition-report/wordpress-condition-report.php' ) {
 			$settings = [
-				'send_data' => '<a href="javascript:jQuery.post( ajaxurl, { \'action\': \'website_monitor_send_data\' }, function(data) { data = JSON.parse(data); console.log(data); if (data.success) { alert(\'The monitoring server has been updated.\'); } else { alert(data.error_message); } })">' . __( 'Send data now', 'WebsiteMonitor' ) . '</a>',
-				'copy_data' => '<a href="javascript:jQuery.post( ajaxurl, { \'action\': \'website_monitor_copy_data\' }, function(data) { navigator.permissions.query({name: \'clipboard-write\'}).then(result => { if (result.state == \'granted\' || result.state == \'prompt\') { navigator.clipboard.writeText(data).then(function() { alert(\'The JSON data is in your clipboard. You can now paste it into another application.\'); }, function() { alert(\'Cannot write to clipboard\'); }); } else { alert(\'Cannot write to clipboard\'); } }); })">' . __( 'Clipboard', 'WebsiteMonitor' ) . '</a>',
+				'send_data' => '<a href="javascript:jQuery.post( ajaxurl, { \'action\': \'condition_report_send_data\' }, function(data) { data = JSON.parse(data); console.log(data); if (data.success) { alert(\'The monitoring server has been updated.\'); } else { alert(data.error_message); } })">' . __( 'Send data now', 'ConditionReport' ) . '</a>',
+				'copy_data' => '<a href="javascript:jQuery.post( ajaxurl, { \'action\': \'condition_report_copy_data\' }, function(data) { navigator.permissions.query({name: \'clipboard-write\'}).then(result => { if (result.state == \'granted\' || result.state == \'prompt\') { navigator.clipboard.writeText(data).then(function() { alert(\'The JSON data is in your clipboard. You can now paste it into another application.\'); }, function() { alert(\'Cannot write to clipboard\'); }); } else { alert(\'Cannot write to clipboard\'); } }); })">' . __( 'Clipboard', 'ConditionReport' ) . '</a>',
 			];
 			$actions = array_merge( $settings, $actions );
 		}
