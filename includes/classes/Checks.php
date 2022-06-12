@@ -11,36 +11,36 @@ namespace Eighteen73\WebsiteMonitor;
 /**
  * Gathers data that's useful for diagnostic checks
  */
-class Checks extends Singleton {
+class Checks {
 
 	/**
 	 * The presumed project  root for this website.
 	 *
 	 * @var string|null
 	 */
-	private ?string $root_path = null;
+	private static ?string $root_path = null;
 
 	/**
 	 * Runs should be initiated by a cron task
 	 */
-	public function run(): array {
+	public static function run(): array {
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
 		$theme = wp_get_theme();
 
-		$plugins = $this->parse_plugins( get_plugins() );
-		$mu_plugins = $this->parse_plugins( get_mu_plugins(), true );
+		$plugins = self::parse_plugins( get_plugins() );
+		$mu_plugins = self::parse_plugins( get_mu_plugins(), true );
 		$plugins = array_merge( $plugins, $mu_plugins );
 		$names  = array_column( $plugins, 'name' );
 		array_multisort( $names, SORT_ASC, $plugins );
 
-		$this->root_path = $this->get_root_path();
-		$git_origin = $this->git_origin();
-		$git_date = $this->git_date();
+		self::$root_path = self::get_root_path();
+		$git_origin = self::git_origin();
+		$git_date = self::git_date();
 
-		$data = [
+		return [
 			'cms' => [
 				'contact' => get_bloginfo( 'admin_email' ),
 				'name' => 'wordpress',
@@ -56,7 +56,7 @@ class Checks extends Singleton {
 				'git' => [
 					'last_commit_date' => $git_date,
 					'origin' => $git_origin,
-					'path' => $this->root_path,
+					'path' => self::$root_path,
 				],
 				'os' => [
 					'architecture' => php_uname( 'm' ),
@@ -65,7 +65,7 @@ class Checks extends Singleton {
 					'version' => php_uname( 'r' ),
 				],
 				'php' => [
-					'composer-dev' => $this->has_dev_packages(),
+					'composer-dev' => self::has_dev_packages(),
 					'interface' => php_sapi_name(),
 					'version' => phpversion(),
 				],
@@ -80,7 +80,6 @@ class Checks extends Singleton {
 				],
 			],
 		];
-		return $data;
 	}
 
 	/**
@@ -90,7 +89,7 @@ class Checks extends Singleton {
 	 * @param bool  $must_use Implies these are effectively active even if not actually activated
 	 * @return array
 	 */
-	private function parse_plugins( array $plugins, bool $must_use = false ): array {
+	private static function parse_plugins( array $plugins, bool $must_use = false ): array {
 		$out = [];
 		$active_plugins = get_option( 'active_plugins' );
 		foreach ( $plugins as $plugin_name => $plugin ) {
@@ -110,7 +109,7 @@ class Checks extends Singleton {
 	 *
 	 * @return string
 	 */
-	private function get_root_path(): ?string {
+	private static function get_root_path(): ?string {
 		// Try up to 3 levels
 		$wp_dir = '/' . trim( ABSPATH, '/' );
 		$try_dirs = [
@@ -134,11 +133,11 @@ class Checks extends Singleton {
 	 *
 	 * @return string|null
 	 */
-	private function git_origin(): ?string {
-		if ( ! $this->root_path ) {
+	private static function git_origin(): ?string {
+		if ( ! self::$root_path ) {
 			return null;
 		}
-		$cmd = 'git -C ' . escapeshellarg( $this->root_path ) . ' remote get-url origin';
+		$cmd = 'git -C ' . escapeshellarg( self::$root_path ) . ' remote get-url origin';
 		$response = exec( $cmd );
 		return $response ?: null;
 	}
@@ -148,11 +147,11 @@ class Checks extends Singleton {
 	 *
 	 * @return string|null
 	 */
-	private function git_date(): ?string {
-		if ( ! $this->root_path ) {
+	private static function git_date(): ?string {
+		if ( ! self::$root_path ) {
 			return null;
 		}
-		$cmd = 'git -C ' . escapeshellarg( $this->root_path ) . ' log -1 --format=%cd';
+		$cmd = 'git -C ' . escapeshellarg( self::$root_path ) . ' log -1 --format=%cd';
 		$response = exec( $cmd );
 		return $response ?: null;
 	}
@@ -162,10 +161,10 @@ class Checks extends Singleton {
 	 *
 	 * @return bool
 	 */
-	private function has_dev_packages(): bool {
-		$cmd = 'composer -d ' . escapeshellarg( $this->root_path ) . ' show -N';
+	private static function has_dev_packages(): bool {
+		$cmd = 'composer -d ' . escapeshellarg( self::$root_path ) . ' show -N';
 		$all_packages = shell_exec( $cmd );
-		$cmd = 'composer -d ' . escapeshellarg( $this->root_path ) . ' show -N --no-dev';
+		$cmd = 'composer -d ' . escapeshellarg( self::$root_path ) . ' show -N --no-dev';
 		$non_dev_packages = shell_exec( $cmd );
 		return $all_packages !== $non_dev_packages;
 	}
