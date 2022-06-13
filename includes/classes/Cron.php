@@ -15,16 +15,6 @@ use WP_Error;
 class Cron {
 
 	/**
-	 * How often should be data be sent (in seconds)
-	 */
-	const CRON_INTERVAL = 10800;
-
-	/**
-	 * The URL where should the data should be sent
-	 */
-	const REMOTE_POST_URL = 'https://hub.eighteen73.co.uk/api/condition-report';
-
-	/**
 	 * Set up the cron control
 	 */
 	public static function setup() {
@@ -38,6 +28,30 @@ class Cron {
 	}
 
 	/**
+	 * Get the scheduled task's interval (in seconds). Defaults to three hours.
+	 *
+	 * @return int
+	 */
+	public static function get_interval(): ?int {
+		if ( defined( 'CONDITION_REPORT_INTERVAL' ) && is_integer( CONDITION_REPORT_INTERVAL ) ) {
+			return CONDITION_REPORT_INTERVAL;
+		}
+		return 10800;
+	}
+
+	/**
+	 * Get the URL that this data will be POSTed to
+	 *
+	 * @return string|null
+	 */
+	public static function get_remote_url(): ?string {
+		if ( defined( 'CONDITION_REPORT_URL' ) && CONDITION_REPORT_URL ) {
+			return CONDITION_REPORT_URL;
+		}
+		return null;
+	}
+
+	/**
 	 * Add a custom schedule for this task
 	 *
 	 * @param array $schedules Cron schedules
@@ -45,7 +59,7 @@ class Cron {
 	 */
 	public static function job_schedule( array $schedules ): array {
 		$schedules['condition_report_schedule'] = [
-			'interval' => self::CRON_INTERVAL,
+			'interval' => self::get_interval(),
 			'display' => __( 'Every 3 hours' ),
 		];
 		return $schedules;
@@ -78,15 +92,29 @@ class Cron {
 	 */
 	public static function run_checks() {
 		$data = Checks::run();
+
+		$remote_url = self::get_remote_url();
+		if ( ! $remote_url ) {
+			error_log( 'Failed run wordpress-condition-report: Missing CONDITION_REPORT_URL' );
+			return [
+				'invalid_configuration' => [ 'CONDITION_REPORT_URL is not defined' ],
+			];
+		}
+
+		$headers = [
+			'Accept' => 'application/json',
+			'Content-Type' => 'application/json',
+			'X-Condition-Report-Hostname' => $data['technical']['web']['domain'],
+		];
+
+		// Allow the headers to be modified
+		$headers = apply_filters( 'condition_report_headers', $headers );
+
 		$response = wp_remote_post(
-			self::REMOTE_POST_URL,
+			$remote_url,
 			[
 				'body' => [
-					'headers' => [
-						'Accept' => 'application/json',
-						'Content-Type' => 'application/json',
-						'X-Condition-Report' => $data['technical']['web']['domain'],
-					],
+					'headers' => $headers,
 					'body' => json_encode( $data ),
 				],
 			]

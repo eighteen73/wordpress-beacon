@@ -9,15 +9,21 @@ This plugin gathers data that's useful for diagnostic checks. Nothing collected 
 1. Run `composer require eighteen73/wordpress-condition-report`
 2. Activate the plugin in your CMS as normal
 
+Once activated it sends data to our monitoring server every 3 hours.
+
 ### Without Composer
 
 We highly encourage you to install the plugin using Composer where possible. On website's that are not package-managed it can be unzipped into the plugins directory though.
 
-## Behaviour
+## Configuration
 
-The plugin requires no configuration. Once activated it sends data to our monitoring server every 3 hours.
+Add the following configuration so the plugin knows where to send the data:
 
-If you make a fork of this plugin for your own use, the time interval and destination URL for the data are both defined in `includes/classes/Cron.php`. They were hardcoded because this plugin is really intended for internal use only and we wanted to remove any configuration requirements.
+```php
+define( 'CONDITION_REPORT_URL', 'https://example.com/your/api/endpoint' );
+```
+
+You may also set `CONDITION_REPORT_INTERVAL` to change the number of seconds between runs (default is 3 hours) and use the filter `condition_report_headers` to adjust the headers sent to the URL above.
 
 ## Included Data
 
