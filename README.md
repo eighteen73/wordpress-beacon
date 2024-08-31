@@ -1,4 +1,4 @@
-# Website Condition for WordPress
+# Status Beacon for WordPress
 
 This plugin gathers data that's useful for diagnostic checks. Nothing collected is PII nor does it contain information that would be otherwise considered as highly sensitive.
 
@@ -6,7 +6,7 @@ This plugin gathers data that's useful for diagnostic checks. Nothing collected 
 
 ### Using Composer
 
-1. Run `composer require eighteen73/wordpress-condition-report`
+1. Run `composer require eighteen73/wordpress-beacon`
 2. Activate the plugin in your CMS as normal
 
 Once activated it sends data to our monitoring server every 3 hours.
@@ -20,10 +20,10 @@ We highly encourage you to install the plugin using Composer where possible. On 
 Add the following configuration so the plugin knows where to send the data:
 
 ```php
-define( 'CONDITION_REPORT_URL', 'https://example.com/your/api/endpoint' );
+define( 'BEACON_URL', 'https://example.com/your/api/endpoint' );
 ```
 
-You may also set `CONDITION_REPORT_INTERVAL` to change the number of seconds between runs (default is 3 hours) and use the filter `condition_report_headers` to adjust the headers sent to the URL above.
+You may also set `BEACON_INTERVAL` to change the number of seconds between runs (default is 3 hours) and use the filter `beacon_headers` to adjust the headers sent to the URL above.
 
 ## Included Data
 
@@ -55,9 +55,9 @@ Here is an example of the compiled data:
     },
     {
       "active": true,
-      "name": "wordpress-condition-report",
-      "title": "eighteen73 Condition Report",
-      "uri": "https://github.com/eighteen73/wordpress-condition-report",
+      "name": "wordpress-beacon",
+      "title": "eighteen73 Beacon",
+      "uri": "https://github.com/eighteen73/wordpress-beacon",
       "version": "1.0.0"
     },
     ...

@@ -3,10 +3,10 @@
  * Gathers data that's useful for diagnostic checks. Nothing collected is PII nor does it contain information
  * that would be otherwise considered as highly sensitive.
  *
- * @package ConditionReport
+ * @package Beacon
  */
 
-namespace Eighteen73\ConditionReport;
+namespace Eighteen73\Beacon;
 
 /**
  * Gathers data that's useful for diagnostic checks

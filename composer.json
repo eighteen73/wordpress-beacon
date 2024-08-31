@@ -16,7 +16,7 @@
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
-      "Eighteen73\\ConditionReport\\": "includes/classes/"
+      "Eighteen73\\Beacon\\": "includes/classes/"
     }
   },
   "config": {
