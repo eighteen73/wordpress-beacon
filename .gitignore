@@ -1,7 +1,4 @@
-# Exclude all of vendor apart from the useful autoloader
-/vendor/*
-!/vendor/composer
-!/vendor/autoload.php
+vendor
 
 # Developer files
 .idea
