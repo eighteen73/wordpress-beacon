@@ -41,6 +41,10 @@ class Checks {
 		$git_date        = self::git_date();
 
 		return [
+			// We only pass the major version. Only breaking changes should prompt a new version.
+			'beacon'    => [
+				'version' => 1,
+			],
 			'cms'       => [
 				'contact' => get_bloginfo( 'admin_email' ),
 				'name'    => 'wordpress',
