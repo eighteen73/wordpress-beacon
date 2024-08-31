@@ -1,34 +1,27 @@
 {
-    "name": "eighteen73/wordpress-condition-report",
-    "description": "Send website information to the developer's monitoring service for integrity checks.",
-    "type": "wordpress-plugin",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Eighteen73\\ConditionReport\\": "includes/classes/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Ed Jeavons",
-            "email": "ed@orphans.co.uk"
-        }
-    ],
-    "minimum-stability": "stable",
-    "require": {
-        "php": ">=7.4"
-    },
-    "require-dev": {
-        "eighteen73/phpcs-composer": "^v1.0"
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
-    },
-    "scripts": {
-        "test": [
-            "phpcs"
-        ]
+  "name": "eighteen73/wordpress-beacon",
+  "description": "Send website information to the developer's monitoring service for integrity checks.",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ed Jeavons",
+      "email": "ed@eighteen73.co.uk"
     }
+  ],
+  "require-dev": {
+    "php": ">=7.4",
+    "eighteen73/wordpress-coding-standards": "^2.0.0"
+  },
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "Eighteen73\\ConditionReport\\": "includes/classes/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
 }
