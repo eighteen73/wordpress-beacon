@@ -30,53 +30,53 @@ class Checks {
 
 		$theme = wp_get_theme();
 
-		$plugins = self::parse_plugins( get_plugins() );
+		$plugins    = self::parse_plugins( get_plugins() );
 		$mu_plugins = self::parse_plugins( get_mu_plugins(), true );
-		$plugins = array_merge( $plugins, $mu_plugins );
-		$names  = array_column( $plugins, 'name' );
+		$plugins    = array_merge( $plugins, $mu_plugins );
+		$names      = array_column( $plugins, 'name' );
 		array_multisort( $names, SORT_ASC, $plugins );
 
 		self::$root_path = self::get_root_path();
-		$git_origin = self::git_origin();
-		$git_date = self::git_date();
+		$git_origin      = self::git_origin();
+		$git_date        = self::git_date();
 
 		return [
-			'cms' => [
+			'cms'       => [
 				'contact' => get_bloginfo( 'admin_email' ),
-				'name' => 'wordpress',
+				'name'    => 'wordpress',
 				'version' => get_bloginfo( 'version' ),
 			],
-			'theme' => [
-				'name' => $theme->get( 'Name' ),
-				'uri' => $theme->get( 'ThemeURI' ),
+			'theme'     => [
+				'name'    => $theme->get( 'Name' ),
+				'uri'     => $theme->get( 'ThemeURI' ),
 				'version' => $theme->get( 'Version' ),
 			],
-			'plugins' => $plugins,
+			'plugins'   => $plugins,
 			'technical' => [
 				'git' => [
 					'last_commit_date' => $git_date,
-					'origin' => $git_origin,
-					'path' => self::$root_path,
+					'origin'           => $git_origin,
+					'path'             => self::$root_path,
 				],
-				'os' => [
+				'os'  => [
 					'architecture' => php_uname( 'm' ),
-					'hostname' => php_uname( 'n' ),
-					'name' => php_uname( 's' ),
-					'version' => php_uname( 'r' ),
+					'hostname'     => php_uname( 'n' ),
+					'name'         => php_uname( 's' ),
+					'version'      => php_uname( 'r' ),
 				],
 				'php' => [
 					'composer-dev' => self::has_dev_packages(),
-					'interface' => php_sapi_name(),
-					'version' => phpversion(),
+					'interface'    => php_sapi_name(),
+					'version'      => phpversion(),
 				],
 				'web' => [
-					'domain' => $_SERVER['HTTP_HOST'],
-					'https' => isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on',
-					'ip' => $_SERVER['SERVER_ADDR'] ?? null,
-					'path' => $_SERVER['DOCUMENT_ROOT'] ?? null,
+					'domain'   => $_SERVER['HTTP_HOST'],
+					'https'    => isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on',
+					'ip'       => $_SERVER['SERVER_ADDR'] ?? null,
+					'path'     => $_SERVER['DOCUMENT_ROOT'] ?? null,
 					'protocol' => $_SERVER['SERVER_PROTOCOL'] ?? null,
-					'server' => $_SERVER['SERVER_SOFTWARE'] ?? null,
-					'url' => get_bloginfo( 'url' ),
+					'server'   => $_SERVER['SERVER_SOFTWARE'] ?? null,
+					'url'      => get_bloginfo( 'url' ),
 				],
 			],
 		];
@@ -90,14 +90,14 @@ class Checks {
 	 * @return array
 	 */
 	private static function parse_plugins( array $plugins, bool $must_use = false ): array {
-		$out = [];
+		$out            = [];
 		$active_plugins = get_option( 'active_plugins' );
 		foreach ( $plugins as $plugin_name => $plugin ) {
 			$out[] = [
-				'active' => $must_use || in_array( $plugin_name, $active_plugins ),
-				'name' => $plugin['TextDomain'] ?: preg_replace( '/([^\/]+)(\.php|\/.+)/', '$1', $plugin_name ),
-				'title' => $plugin['Title'] ?: $plugin['Name'],
-				'uri' => $plugin['PluginURI'],
+				'active'  => $must_use || in_array( $plugin_name, $active_plugins, true ),
+				'name'    => $plugin['TextDomain'] ?: preg_replace( '/([^\/]+)(\.php|\/.+)/', '$1', $plugin_name ),
+				'title'   => $plugin['Title'] ?: $plugin['Name'],
+				'uri'     => $plugin['PluginURI'],
 				'version' => $plugin['Version'],
 			];
 		}
@@ -111,7 +111,7 @@ class Checks {
 	 */
 	private static function get_root_path(): ?string {
 		// Try up to 3 levels
-		$wp_dir = '/' . trim( ABSPATH, '/' );
+		$wp_dir   = '/' . trim( ABSPATH, '/' );
 		$try_dirs = [
 			$wp_dir,
 			dirname( $wp_dir ),
@@ -137,7 +137,7 @@ class Checks {
 		if ( ! self::$root_path ) {
 			return null;
 		}
-		$cmd = 'git -C ' . escapeshellarg( self::$root_path ) . ' remote get-url origin';
+		$cmd      = 'git -C ' . escapeshellarg( self::$root_path ) . ' remote get-url origin';
 		$response = exec( $cmd );
 		return $response ?: null;
 	}
@@ -151,7 +151,7 @@ class Checks {
 		if ( ! self::$root_path ) {
 			return null;
 		}
-		$cmd = 'git -C ' . escapeshellarg( self::$root_path ) . ' log -1 --format=%cd';
+		$cmd      = 'git -C ' . escapeshellarg( self::$root_path ) . ' log -1 --format=%cd';
 		$response = exec( $cmd );
 		return $response ?: null;
 	}
@@ -162,9 +162,9 @@ class Checks {
 	 * @return bool
 	 */
 	private static function has_dev_packages(): bool {
-		$cmd = 'composer -d ' . escapeshellarg( self::$root_path ) . ' show -N';
-		$all_packages = shell_exec( $cmd );
-		$cmd = 'composer -d ' . escapeshellarg( self::$root_path ) . ' show -N --no-dev';
+		$cmd              = 'composer -d ' . escapeshellarg( self::$root_path ) . ' show -N';
+		$all_packages     = shell_exec( $cmd );
+		$cmd              = 'composer -d ' . escapeshellarg( self::$root_path ) . ' show -N --no-dev';
 		$non_dev_packages = shell_exec( $cmd );
 		return $all_packages !== $non_dev_packages;
 	}

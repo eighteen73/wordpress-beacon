@@ -60,7 +60,7 @@ class Cron {
 	public static function job_schedule( array $schedules ): array {
 		$schedules['condition_report_schedule'] = [
 			'interval' => self::get_interval(),
-			'display' => __( 'Every 3 hours' ),
+			'display'  => __( 'Every 3 hours' ),
 		];
 		return $schedules;
 	}
@@ -102,8 +102,8 @@ class Cron {
 		}
 
 		$headers = [
-			'Accept' => 'application/json',
-			'Content-Type' => 'application/json',
+			'Accept'                      => 'application/json',
+			'Content-Type'                => 'application/json',
 			'X-Condition-Report-Hostname' => $data['technical']['web']['domain'],
 		];
 
@@ -115,13 +115,13 @@ class Cron {
 			[
 				'body' => [
 					'headers' => $headers,
-					'body' => json_encode( $data ),
+					'body'    => wp_json_encode( $data ),
 				],
 			]
 		);
 
 		if ( $response instanceof WP_Error ) {
-			$error = json_encode( $response->errors );
+			$error = wp_json_encode( $response->errors );
 			error_log( "Failed run wordpress-condition-report: {$error}" );
 			return $response->errors;
 		}

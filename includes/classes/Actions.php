@@ -34,7 +34,7 @@ class Actions {
 				'send_data' => '<a href="javascript:jQuery.post( ajaxurl, { \'action\': \'condition_report_send_data\' }, function(data) { data = JSON.parse(data); console.log(data); if (data.success) { alert(\'The monitoring server has been updated.\'); } else { alert(data.error_message); } })">' . __( 'Send data now', 'ConditionReport' ) . '</a>',
 				'copy_data' => '<a href="javascript:jQuery.post( ajaxurl, { \'action\': \'condition_report_copy_data\' }, function(data) { navigator.permissions.query({name: \'clipboard-write\'}).then(result => { if (result.state == \'granted\' || result.state == \'prompt\') { navigator.clipboard.writeText(data).then(function() { alert(\'The JSON data is in your clipboard. You can now paste it into another application.\'); }, function() { alert(\'Cannot write to clipboard\'); }); } else { alert(\'Cannot write to clipboard\'); } }); })">' . __( 'Clipboard', 'ConditionReport' ) . '</a>',
 			];
-			$actions = array_merge( $settings, $actions );
+			$actions  = array_merge( $settings, $actions );
 		}
 		return $actions;
 	}
@@ -46,15 +46,15 @@ class Actions {
 	 */
 	public static function send_data() {
 		$response = Cron::run_checks();
-		$out = [
-			'success' => $response === true,
+		$out      = [
+			'success'       => $response === true,
 			'error_message' => null,
 		];
 		if ( ! $out['success'] ) {
 			// TODO Return a human-readable error message & advice
-			$out['error_message'] = json_encode( $response );
+			$out['error_message'] = wp_json_encode( $response );
 		}
-		echo json_encode( $out );
+		echo wp_json_encode( $out );
 		wp_die();
 	}
 
@@ -64,8 +64,7 @@ class Actions {
 	 * @return void
 	 */
 	public static function copy_data() {
-		echo json_encode( Checks::run(), JSON_PRETTY_PRINT );
+		echo wp_json_encode( Checks::run(), JSON_PRETTY_PRINT );
 		wp_die();
 	}
-
 }
